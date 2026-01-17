@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Muki的转运小站✨</title>
+    <style>
+        /* 基础样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #fcfcf0; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-user-select: none;
+        }
+
+        .container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 4vh;
+            padding-bottom: 40px;
+        }
+
+        .fortune-wrapper {
+            width: 85%; 
+            max-width: 400px;
+            filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.15));
+            line-height: 0;
+        }
+
+        #fortune-img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            border-radius: 12px;
+            display: block;
+            pointer-events: auto;
+        }
+
+        .follow-link {
+            margin-top: 35px;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.2s ease;
+            filter: drop-shadow(0px 8px 15px rgba(0, 0, 0, 0.12));
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .follow-link:active {
+            transform: scale(0.92);
+        }
+
+        #follow-png {
+            width: 300px; /* 已经按你的要求改大到 300px */
+            height: auto;
+            display: block;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 10px;
+            color: #cccccc; /* 稍微深一点点，防止背景太白看不见 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="fortune-wrapper">
+            <img id="fortune-img" src="" alt="Lucky Drawing">
+        </div>
+
+        <a href="https://www.instagram.com/yuxuantsuki/" class="follow-link">
+            <img id="follow-png" src="Follow My IG.png" alt="Follow Me">
+        </a>
+
+        <div class="footer">Designed by @yuxuantsuki</div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let picName = urlParams.get('p'); 
+
+        // 你的默认图片
+        const defaultImage = '1. Pokerchip - Wealth_1.png'; 
+
+        const fortuneImg = document.getElementById('fortune-img');
+
+        if (picName) {
+            // 拼接图片路径
+            fortuneImg.src = picName + '.png';
+            
+            // 容错处理
+            fortuneImg.onerror = function() {
+                console.log("找不到指定图片，切换为默认图");
+                this.src = defaultImage;
+                this.onerror = null; 
+            };
+        } else {
+            fortuneImg.src = defaultImage;
+        }
+    </script>
