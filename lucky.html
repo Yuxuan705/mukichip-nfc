@@ -3,149 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Muki 2026 宇宙信号接收中... ✨</title>
+    <title>Muki 2026 接收宇宙信号 ✨</title>
     <style>
-        /* 全局样式 */
+        /* --- 基础设置 --- */
         body {
             margin: 0; padding: 0;
-            background-color: #fcfcf0; /* 你的经典米色背景 */
+            background-color: #fcfcf0; /* 米色背景 */
             font-family: -apple-system, sans-serif;
-            overflow: hidden; /* 禁止滚动，保持APP感 */
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            -webkit-tap-highlight-color: transparent;
+            min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            -webkit-user-select: none;
+            overflow-x: hidden; /* 防止左右晃动 */
         }
 
-        /* 1. Landing Page (封面页) */
-        #landing-page {
-            position: absolute;
+        /* --- 1. Landing Page (封面层) --- */
+        /* 这是一个覆盖在最上面的全屏层 */
+        #landing-layer {
+            position: fixed; /* 固定定位，盖住一切 */
             top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fcfcf0; /* 和背景色一样，遮挡下面的内容 */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 999; /* 层级最高 */
             cursor: pointer;
-            transition: opacity 0.5s ease; /* 淡出效果 */
+            transition: opacity 0.5s ease; /* 淡出动画 */
         }
 
-        /* 你的自定义按钮/封面图样式 */
-        #start-image {
-            width: 60%; /* 大小你可以自己调 */
-            max-width: 300px;
-            height: auto;
-            /* 给按钮加一点缓慢的浮动动画，看起来是活的 */
-            animation: float 3s ease-in-out infinite; 
-            filter: drop-shadow(0px 10px 15px rgba(0,0,0,0.1));
+        #start-btn-img {
+            width: 60%; max-width: 280px; height: auto;
+            animation: breathe 3s ease-in-out infinite; /* 呼吸效果 */
+            filter: drop-shadow(0px 10px 20px rgba(0,0,0,0.15));
         }
 
         .hint-text {
-            margin-top: 20px;
-            color: #999;
-            font-size: 14px;
-            letter-spacing: 2px;
-            animation: pulse 2s infinite;
+            margin-top: 25px; color: #aaa; font-size: 12px; letter-spacing: 3px;
+            animation: blink 1.5s infinite;
         }
 
-        /* 2. Drawing Stage (抽签展示区) */
-        #drawing-stage {
-            display: none; /* 一开始隐藏 */
+        /* --- 2. 抽签结果页 (和之前的 index.html 布局一样) --- */
+        #main-content {
+            display: none; /* 一开始隐藏，等点开始才显示 */
             width: 100%;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
+            align-items: center;
+            padding-top: 4vh; padding-bottom: 50px;
+            opacity: 0; transition: opacity 0.5s; /* 淡入效果 */
         }
 
-        /* 签诗图片样式 */
-        #fortune-display {
-            width: 90%;
-            max-width: 400px;
-            aspect-ratio: 9/16;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        .fortune-wrapper {
+            width: 85%; max-width: 400px;
+            line-height: 0;
+            filter: drop-shadow(0px 15px 30px rgba(0,0,0,0.2)); /* 阴影加深一点，更有质感 */
         }
 
-        /* 动画定义 */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+        #fortune-img {
+            width: 100%; height: auto; aspect-ratio: 9 / 16;
+            object-fit: cover; border-radius: 12px; display: block;
         }
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
+
+        /* IG 按钮区域 */
+        .follow-link {
+            margin-top: 35px; text-decoration: none; display: block;
+            transition: transform 0.2s;
+            filter: drop-shadow(0px 8px 15px rgba(0,0,0,0.1));
+            -webkit-tap-highlight-color: transparent;
+        }
+        .follow-link:active { transform: scale(0.95); }
+        
+        #follow-png { width: 300px; height: auto; display: block; }
+
+        .footer { margin-top: 30px; font-size: 10px; color: #ccc; }
+
+        /* --- 动画定义 --- */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
     </style>
 </head>
 <body>
 
-    <div id="landing-page" onclick="startDraw()">
-        <img id="start-image" src="start_btn.png" alt="Touch to Start">
-        <div class="hint-text">TOUCH TO RECEIVE</div>
+    <div id="landing-layer" onclick="startLottery()">
+        <img id="start-btn-img" src="start_btn.png" alt="Touch to Start">
+        <div class="hint-text">TOUCH TO START</div>
     </div>
 
-    <div id="drawing-stage">
-        <img id="fortune-display" src="" alt="Fortune">
+    <div id="main-content">
+        <div class="fortune-wrapper">
+            <img id="fortune-img" src="" alt="Fortune">
+        </div>
+
+        <a href="https://www.instagram.com/yuxuantsuki/" class="follow-link">
+            <img id="follow-png" src="Follow My IG.png" alt="Follow Me">
+        </a>
+        
+        <div class="footer">Designed by @yuxuantsuki</div>
     </div>
 
     <script>
-        // 定义你的 6 大分类
+        // === 配置区域 ===
+        // 确保这里的分类名字首字母大写，和你文件名一模一样
         const categories = ['Career', 'Health', 'Love', 'Lucky', 'Secret', 'Wealth'];
+        const totalImagesPerCat = 50; 
+        
+        // 动画设置
+        const animationDuration = 2000; // 总共闪动 2 秒
+        const shuffleSpeed = 80;        // 每 0.08 秒换一张图 (非常快)
 
-        // 随机生成一张图片地址的函数
-        function getRandomPic() {
-            // 1. 随机选一个分类 (0-5)
+        // 生成随机图片路径的工具函数
+        function getRandomSrc() {
             const randomCat = categories[Math.floor(Math.random() * categories.length)];
-            // 2. 随机选一个数字 (1-50)
-            const randomNum = Math.floor(Math.random() * 50) + 1;
-            // 3. 拼接文件名
+            const randomNum = Math.floor(Math.random() * totalImagesPerCat) + 1;
             return randomCat + '_' + randomNum + '.png';
         }
 
-        // 开始抽签的主函数
-        function startDraw() {
-            const landing = document.getElementById('landing-page');
-            const stage = document.getElementById('drawing-stage');
-            const img = document.getElementById('fortune-display');
+        // === 核心逻辑 ===
+        function startLottery() {
+            const landing = document.getElementById('landing-layer');
+            const main = document.getElementById('main-content');
+            const img = document.getElementById('fortune-img');
 
-            // 1. 界面切换：隐藏封面，显示展示区
-            landing.style.opacity = '0';
-            setTimeout(() => {
-                landing.style.display = 'none';
-                stage.style.display = 'flex';
-            }, 500); // 等500毫秒淡出动画结束
-
-            // 2. 播放“闪动”动画 (Shuffle Animation)
-            // 总时长 3000 毫秒 (3秒)
-            // 每 100 毫秒换一张图 (闪动速度，数字越小越快)
-            let duration = 3000;
-            let intervalTime = 100; 
+            // 1. 界面切换
+            landing.style.opacity = '0'; // 封面淡出
             
-            // 立即先显示一张，防止空白
-            img.src = getRandomPic();
-
-            // 启动定时器，疯狂切图
-            const shuffler = setInterval(() => {
-                img.src = getRandomPic();
-            }, intervalTime);
-
-            // 3. 3秒后停止，定格命运
             setTimeout(() => {
-                clearInterval(shuffler); // 停止闪动
+                landing.style.display = 'none'; // 彻底移除封面
+                main.style.display = 'flex';    // 显示主内容
                 
-                // ⚠️ 这里是重点：最后再取一次随机，作为最终结果！
-                // 这样确保结果是完全随机的，而且定格的那一下很稳
-                img.src = getRandomPic(); 
-                
-                // (可选) 可以在这里加一个震动效果，如果手机支持
-                if (navigator.vibrate) navigator.vibrate(200);
+                // 强制重绘，确保淡入动画生效
+                requestAnimationFrame(() => {
+                    main.style.opacity = '1';
+                });
+            }, 500);
 
-            }, duration);
+            // 2. 预加载一张图防止空白
+            img.src = getRandomSrc();
+
+            // 3. 开始疯狂闪动
+            const timer = setInterval(() => {
+                img.src = getRandomSrc();
+            }, shuffleSpeed);
+
+            // 4. 定时结束，定格命运
+            setTimeout(() => {
+                clearInterval(timer); // 停止闪动
+                
+                //生成最终结果
+                const finalResult = getRandomSrc();
+                img.src = finalResult;
+
+                // 尝试震动一下手机 (安卓支持较好)
+                if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+
+                console.log("命运已定格: " + finalResult);
+
+            }, animationDuration);
         }
     </script>
 
