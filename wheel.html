@@ -22,10 +22,27 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- 标题样式 --- */
+        /* --- 🆕 新增：顶部 Coin 图片样式 --- */
+        .coin-header-img {
+            width: 80px; /* 图片宽度，你可以根据需要调整 */
+            height: auto;
+            margin-top: 40px; /* 距离顶部的距离 */
+            margin-bottom: 15px; /* 距离下面标题的距离 */
+            /* 加一点像素风的投影，让它浮起来 */
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+            /* 可选：加一个简单的上下浮动动画 */
+            animation: floatCoin 2s ease-in-out infinite;
+        }
+
+        @keyframes floatCoin {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* --- 标题样式 (调整了边距) --- */
         h1 { 
             color: #333; 
-            margin-top: 45px; 
+            margin-top: 0; /* 把之前的 margin 去掉，由上面的图片控制间距 */
             font-size: 18px; 
             font-family: 'Silkscreen', cursive; 
             letter-spacing: 1px;
@@ -71,24 +88,19 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
-        /* --- 中间按钮 (GO) 修改版 --- */
+        /* --- 中间按钮 (GO) 全白版 --- */
         .center-btn {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 80px; height: 80px;
-            
-            /* 👇 修改这里：背景全白，去掉边框 */
             background: #fff;
-            border: none; /* 之前的黑边框删掉了 */
-            
+            border: none;
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             font-family: 'Silkscreen', cursive; 
-            font-size: 24px; color: #333; /* 文字保持深色，不然看不见 */
+            font-size: 24px; color: #333;
             cursor: pointer; z-index: 5;
-            
-            /* 加一点阴影，让它和背景区分开 */
             box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         }
         .center-btn:active { transform: translate(-50%, -50%) scale(0.95); background: #f5f5f5; }
@@ -124,24 +136,28 @@
             width: 100%; border-radius: 12px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: block;
         }
+        
+        /* --- 弹窗关闭按钮 (回归白色版) --- */
         .close-btn {
             margin-top: 25px; padding: 12px 30px;
             
-            /* 之前改好的亮红色 */
-            background: #FF2F01; 
-            color: #fff;
+            /* 回归白色背景，深色文字 */
+            background: #fff; 
+            color: #333;
             
             border-radius: 8px;
-            border: 3px solid #333;
+            border: 3px solid #333; /* 保持像素风黑框 */
             font-family: 'Silkscreen', cursive;
             font-size: 14px; 
             cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             text-transform: uppercase;
         }
-        .close-btn:active { transform: scale(0.95); background: #e02800; }
+        .close-btn:active { transform: scale(0.95); background: #eee; }
     </style>
 </head>
 <body>
+
+    <img src="insert_coin.png" alt="Insert Coin" class="coin-header-img">
 
     <h1>INSERT COIN TO START</h1>
 
