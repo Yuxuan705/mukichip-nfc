@@ -8,89 +8,55 @@
         /* --- 全局样式 --- */
         body {
             margin: 0; padding: 0;
-            background-color: #fcfcf0; /* 米色背景 */
+            background-color: #fcfcf0;
             font-family: -apple-system, sans-serif;
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; overflow-x: hidden;
+            min-height: 100vh; 
+            overflow-x: hidden; /* 防止左右摇晃 */
+            padding-bottom: 60px; /* 底部留白，方便滚动 */
             -webkit-tap-highlight-color: transparent;
         }
 
-        h1 { color: #333; margin-top: 30px; letter-spacing: 2px; font-size: 20px; }
+        h1 { 
+            color: #333; margin-top: 40px; 
+            letter-spacing: 2px; font-size: 20px; 
+        }
 
         /* --- 转盘容器 --- */
         .wheel-container {
             position: relative;
-            width: 320px; height: 320px;
+            width: 320px; height: 320px; /* 转盘大小 */
             margin-top: 30px;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.15));
+            margin-bottom: 20px; /* 给下面留点空间 */
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+            /* 防止转盘被选中 */
+            -webkit-user-select: none; user-select: none;
         }
 
         /* --- 转盘本体 --- */
         #wheel {
             width: 100%; height: 100%;
             border-radius: 50%;
-            border: 8px solid #333; /* 转盘外框 */
-            box-sizing: border-box;
             position: relative;
-            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99); /* 旋转动画曲线：先快后慢 */
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
             overflow: hidden;
         }
 
-        /* --- 扇形区域 (用 CSS 锥形渐变画出 6 个格) --- */
-        /* 顺序是顺时针：
-           1. 桃花 (Love) - 粉色
-           2. 财运 (Wealth) - 金色
-           3. 健康 (Health) - 绿色
-           4. 好运 (Lucky) - 黄色
-           5. 事业 (Career) - 蓝色
-           6. 隐藏 (Secret) - 紫色
-        */
-        .wheel-bg {
+        /* --- 你的自定义设计图 --- */
+        #my-wheel-design {
             width: 100%; height: 100%;
+            object-fit: cover; display: block;
             border-radius: 50%;
-            background: conic-gradient(
-                #FF9AA2 0deg 60deg,   /* 桃花 */
-                #FFDAC1 60deg 120deg, /* 财运 */
-                #E2F0CB 120deg 180deg,/* 健康 */
-                #FFEF96 180deg 240deg,/* 好运 */
-                #B5EAD7 240deg 300deg,/* 事业 */
-                #C7CEEA 300deg 360deg /* 隐藏 */
-            );
         }
 
-        /* --- 文字标签 --- */
-        .label {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform-origin: 0 0;
-            color: #333; font-weight: bold; font-size: 16px;
-            width: 130px; /* 半径长度 */
-            text-align: right;
-            padding-right: 20px;
-            line-height: 0;
-            margin-top: -1px; /* 微调垂直居中 */
-        }
-
-        /* 旋转文字让它们对齐到每个格子的中间 */
-        /* 每个格子60度，中间就是30度，90度，150度... */
-        .l-1 { transform: rotate(30deg) translateY(-50%); }  /* 桃花 */
-        .l-2 { transform: rotate(90deg) translateY(-50%); }  /* 财运 */
-        .l-3 { transform: rotate(150deg) translateY(-50%); } /* 健康 */
-        .l-4 { transform: rotate(210deg) translateY(-50%); } /* 好运 */
-        .l-5 { transform: rotate(270deg) translateY(-50%); } /* 事业 */
-        .l-6 { transform: rotate(330deg) translateY(-50%); } /* 隐藏 */
-
-        /* --- 指针 (Arrow) --- */
+        /* --- 指针 --- */
         .pointer {
             position: absolute;
-            top: -15px; left: 50%;
+            top: -20px; left: 50%;
             transform: translateX(-50%);
-            width: 0; height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 35px solid #FF5252; /* 红色指针 */
+            width: 40px; auto; 
             z-index: 10;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
         /* --- 中间按钮 (GO) --- */
@@ -98,46 +64,51 @@
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 70px; height: 70px;
+            width: 80px; height: 80px;
             background: #fff;
             border-radius: 50%;
-            border: 5px solid #333;
+            border: 4px solid #333;
             display: flex; justify-content: center; align-items: center;
             font-weight: 900; font-size: 24px; color: #333;
-            cursor: pointer;
-            z-index: 5;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            cursor: pointer; z-index: 5;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .center-btn:active { background: #eee; transform: translate(-50%, -50%) scale(0.95); }
+        .center-btn:active { transform: translate(-50%, -50%) scale(0.95); background: #eee; }
 
-        /* --- 弹窗样式 (Modal) --- */
+        /* --- IG 按钮区域 --- */
+        .follow-link {
+            margin-top: 40px; /* 距离转盘远一点 */
+            text-decoration: none; display: block;
+            transition: transform 0.2s;
+            filter: drop-shadow(0px 8px 15px rgba(0,0,0,0.1));
+        }
+        .follow-link:active { transform: scale(0.95); }
+        
+        #follow-png { width: 300px; height: auto; display: block; }
+        
+        .footer { margin-top: 30px; font-size: 10px; color: #ccc; }
+
+        /* --- 弹窗样式 --- */
         #modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
-            display: none; /* 默认隐藏 */
-            justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.8); z-index: 999;
+            display: none; justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.3s;
         }
         .modal-content {
             width: 85%; max-width: 380px;
-            background: transparent;
-            text-align: center;
-            position: relative;
+            background: transparent; text-align: center; position: relative;
         }
         #result-img {
             width: 100%; border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            display: block;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: block;
         }
         .close-btn {
-            margin-top: 20px;
-            padding: 10px 30px;
+            margin-top: 25px; padding: 12px 35px;
             background: white; border-radius: 30px;
-            border: none; font-weight: bold; font-size: 16px;
-            cursor: pointer;
+            border: none; font-weight: bold; font-size: 18px;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
-
     </style>
 </head>
 <body>
@@ -145,21 +116,20 @@
     <h1>✨ 2026 转出好运 ✨</h1>
 
     <div class="wheel-container">
-        <div class="pointer"></div>
+        <img src="https://cdn-icons-png.flaticon.com/512/25/25623.png" class="pointer" style="width: 30px; top:-15px; filter: invert(1);">
 
         <div id="wheel">
-            <div class="wheel-bg"></div>
-            
-            <div class="label l-1">🌸 桃花</div>
-            <div class="label l-2">💰 财运</div>
-            <div class="label l-3">🌿 健康</div>
-            <div class="label l-4">🍀 好运</div>
-            <div class="label l-5">💼 事业</div>
-            <div class="label l-6">🔮 隐藏</div>
+            <img id="my-wheel-design" src="wheel_design.png" alt="My Wheel">
         </div>
 
         <div class="center-btn" onclick="spinWheel()">GO</div>
     </div>
+
+    <a href="https://www.instagram.com/yuxuantsuki/" class="follow-link">
+        <img id="follow-png" src="Follow My IG.png" alt="Follow Me">
+    </a>
+
+    <div class="footer">Designed by @yuxuantsuki</div>
 
     <div id="modal-overlay">
         <div class="modal-content">
@@ -169,42 +139,23 @@
     </div>
 
     <script>
-        let currentRotation = 0; // 记录当前转到了多少度
-        let isSpinning = false;  // 防止重复点击
+        let currentRotation = 0;
+        let isSpinning = false;
 
-        // 这里定义每个格子的数据
-        // 注意：因为CSS是顺时针画的，指针在上面
-        // 0-60度是桃花，60-120是财运...
-        // 但是！转盘是顺时针转，意味着指针实际上是“逆时针”扫过格子的
-        // 所以顺序要反着算，或者用数学公式自动算。
-        // 为了简单，我们直接列出 6 个扇区的名字和对应的文件前缀
-        const segments = [
-            { name: '桃花', file: 'Love' },   // 0
-            { name: '隐藏', file: 'Secret' }, // 1 (转动一格后，隐藏会跑到指针下面)
-            { name: '事业', file: 'Career' }, // 2
-            { name: '好运', file: 'Lucky' },  // 3
-            { name: '健康', file: 'Health' }, // 4
-            { name: '财运', file: 'Wealth' }  // 5
-        ];
+        // ⚠️ 重点：请确保你画图的顺序是顺时针 (12点, 2点, 4点...)
+        const segmentConfig = ['Love', 'Wealth', 'Health', 'Lucky', 'Career', 'Secret'];
 
         function spinWheel() {
             if (isSpinning) return;
             isSpinning = true;
-
             const wheel = document.getElementById('wheel');
-            
-            // 1. 随机旋转度数 (至少转 5 圈 = 1800度，加上随机 0-360)
             const randomDeg = Math.floor(Math.random() * 360);
-            const extraSpins = 1800; 
+            const extraSpins = 360 * 5; 
             const totalDeg = currentRotation + extraSpins + randomDeg;
-
-            // 2. 执行旋转 CSS
-            wheel.style.transform = `rotate(${totalDeg}deg)`;
             
-            // 更新当前角度，供下次使用
+            wheel.style.transform = `rotate(${totalDeg}deg)`;
             currentRotation = totalDeg;
 
-            // 3. 计算结果 (等待4秒动画结束)
             setTimeout(() => {
                 isSpinning = false;
                 calculateResult(totalDeg);
@@ -212,36 +163,20 @@
         }
 
         function calculateResult(finalAngle) {
-            // 取余数，得到也就是最终转盘相对于0度的位置
             const actualDeg = finalAngle % 360;
-            
-            // 每个格子 60 度
-            // 算出指针指向了第几个格子
-            // 比如转了 30 度，指针还在 index 0
-            // 转了 70 度，指针就在 index 5 (因为是顺时针转，上面的格子往右跑了，左边的上来了)
-            
-            // 简单的数学转换：(360 - 角度) / 60
+            // 修正指针在上方时的计算逻辑
             let index = Math.floor((360 - actualDeg) / 60) % 6;
-            
-            const result = segments[index];
-            console.log("抽到了: " + result.name);
-            
-            showResult(result.file);
+            const category = segmentConfig[index];
+            showResult(category);
         }
 
         function showResult(category) {
-            // 随机 1-50
             const randomNum = Math.floor(Math.random() * 50) + 1;
             const fileName = category + '_' + randomNum + '.png';
-            
-            // 显示弹窗
             const modal = document.getElementById('modal-overlay');
             const img = document.getElementById('result-img');
-            
             img.src = fileName;
             modal.style.display = 'flex';
-            
-            // 稍微延迟一点让淡入动画生效
             setTimeout(() => { modal.style.opacity = '1'; }, 10);
         }
 
