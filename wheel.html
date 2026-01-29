@@ -79,4 +79,168 @@
 
         /* --- 自定义设计图 --- */
         #my-wheel-design {
-            width: 10
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+        }
+
+        /* --- 指针 (位置更低版) --- */
+        .pointer {
+            position: absolute;
+            /* 👇 修改点：位置继续下移 (从 -10px 到 -2px) */
+            top: -2px; 
+            left: 50%;
+            transform: translateX(-50%);
+            
+            width: 35px; /* 保持小巧 */
+            auto; 
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        /* --- 中间按钮 (加大版 135px) --- */
+        .center-btn {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            
+            width: 135px; 
+            height: 135px;
+            
+            object-fit: contain;
+            cursor: pointer; z-index: 20;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            transition: transform 0.1s;
+        }
+        .center-btn:active { transform: translate(-50%, -50%) scale(0.9); }
+
+        /* --- IG 按钮区域 (紧凑版) --- */
+        .follow-link {
+            margin-top: 10px; /* 保持紧凑 */
+            text-decoration: none; display: block;
+            transition: transform 0.2s;
+            filter: drop-shadow(0px 8px 15px rgba(0,0,0,0.1));
+        }
+        .follow-link:active { transform: scale(0.95); }
+        
+        #follow-png { width: 300px; height: auto; display: block; }
+        
+        .footer { 
+            margin-top: 20px; font-size: 10px; color: #ccc; 
+            font-family: 'Silkscreen', cursive;
+        }
+
+        /* --- 弹窗样式 --- */
+        #modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 999;
+            display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-content {
+            width: 85%; max-width: 380px;
+            background: transparent; text-align: center; position: relative;
+        }
+        #result-img {
+            width: 100%; border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: block;
+        }
+        
+        /* --- 弹窗关闭按钮 --- */
+        .close-btn {
+            margin-top: 25px; padding: 12px 30px;
+            background: #fff; 
+            color: #333;
+            border-radius: 8px;
+            border: 3px solid #333;
+            font-family: 'Silkscreen', cursive;
+            font-size: 14px; 
+            cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+        }
+        .close-btn:active { transform: scale(0.95); background: #eee; }
+    </style>
+</head>
+<body>
+
+    <img src="insert_coin.gif" alt="Insert Coin" class="coin-header-img">
+
+    <h1>INSERT COIN TO START</h1>
+
+    <div class="wheel-container">
+        <img src="https://cdn-icons-png.flaticon.com/512/25/25623.png" class="pointer" style="filter: invert(1);">
+
+        <div id="wheel">
+            <img id="my-wheel-design" src="wheel_design.png" alt="My Wheel">
+        </div>
+
+        <img src="game_btn.png" class="center-btn" onclick="spinWheel()" alt="GO">
+    </div>
+
+    <a href="https://www.instagram.com/yuxuantsuki/" class="follow-link">
+        <img id="follow-png" src="Follow My IG.png" alt="Follow Me">
+    </a>
+
+    <div class="footer">DESIGNED BY @YUXUANTSUKI</div>
+
+    <div id="modal-overlay">
+        <div class="modal-content">
+            <img id="result-img" src="" alt="Result">
+            <button class="close-btn" onclick="closeModal()">CLAIM REWARD</button>
+        </div>
+    </div>
+
+    <script>
+        let currentRotation = 0;
+        let isSpinning = false;
+
+        // 0-60=Love, 60-120=Wealth...
+        const segmentConfig = ['Love', 'Wealth', 'Health', 'Lucky', 'Career', 'Secret'];
+
+        function spinWheel() {
+            if (isSpinning) return;
+            isSpinning = true;
+            const wheel = document.getElementById('wheel');
+            
+            const randomDeg = Math.floor(Math.random() * 360);
+            const extraSpins = 360 * 5; 
+            const totalDeg = currentRotation + extraSpins + randomDeg;
+            
+            wheel.style.transform = `rotate(${totalDeg}deg)`;
+            currentRotation = totalDeg;
+
+            setTimeout(() => {
+                isSpinning = false;
+                calculateResult(totalDeg);
+            }, 4000);
+        }
+
+        function calculateResult(finalAngle) {
+            let actualDeg = (360 - (finalAngle % 360)) % 360;
+            let index = Math.floor(actualDeg / 60);
+
+            if(index >= 6) index = 5;
+
+            const category = segmentConfig[index];
+            console.log("最终角度: " + actualDeg + "° -> 索引: " + index + " -> 结果: " + category);
+            showResult(category);
+        }
+
+        function showResult(category) {
+            const randomNum = Math.floor(Math.random() * 50) + 1;
+            const fileName = category + '_' + randomNum + '.png';
+            const modal = document.getElementById('modal-overlay');
+            const img = document.getElementById('result-img');
+            img.src = fileName;
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.style.opacity = '1'; }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal-overlay');
+            modal.style.opacity = '0';
+            setTimeout(() => { modal.style.display = 'none'; }, 300);
+        }
+    </script>
+
+</body>
+</html>
