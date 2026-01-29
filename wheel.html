@@ -26,8 +26,8 @@
         .coin-header-img {
             width: 80px; 
             height: auto;
-            margin-top: 40px; 
-            margin-bottom: 15px; 
+            margin-top: 30px; 
+            margin-bottom: 10px; 
             animation: floatCoin 2s ease-in-out infinite;
         }
 
@@ -49,14 +49,23 @@
             white-space: nowrap; 
         }
 
-        /* --- 转盘容器 --- */
+        /* --- 转盘容器 (紧凑版) --- */
         .wheel-container {
             position: relative;
-            width: 320px; height: 320px;
-            margin-top: 30px;
-            margin-bottom: 20px;
+            
+            /* 尺寸保持加大版 380px */
+            width: 380px; 
+            height: 380px;
+            
+            /* 👇 修改点：上边距减少 (20px -> 5px)，拉近和标题的距离 */
+            margin-top: 5px;
+            margin-bottom: 0px; 
+            
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
             -webkit-user-select: none; user-select: none;
+            
+            max-width: 95vw; 
+            max-height: 95vw;
         }
 
         /* --- 转盘本体 --- */
@@ -66,8 +75,6 @@
             position: relative;
             transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
             overflow: hidden;
-            
-            /* 防止图片边缘被切掉的内边距 */
             padding: 6px; 
             box-sizing: border-box; 
         }
@@ -81,22 +88,23 @@
         /* --- 指针 --- */
         .pointer {
             position: absolute;
-            top: -20px; left: 50%;
+            top: -25px; 
+            left: 50%;
             transform: translateX(-50%);
-            width: 40px; auto; 
+            width: 45px; 
+            auto; 
             z-index: 10;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
-        /* --- 🆕 中间按钮 (加大版) --- */
+        /* --- 中间按钮 (加大版 135px) --- */
         .center-btn {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             
-            /* 👇 之前是 90px，现在改成了 120px */
-            width: 120px; 
-            height: 120px;
+            width: 135px; 
+            height: 135px;
             
             object-fit: contain;
             cursor: pointer; z-index: 20;
@@ -105,9 +113,9 @@
         }
         .center-btn:active { transform: translate(-50%, -50%) scale(0.9); }
 
-        /* --- IG 按钮区域 --- */
+        /* --- IG 按钮区域 (紧凑版) --- */
         .follow-link {
-            margin-top: 40px;
+            margin-top: 10px; /* 保持紧凑 */
             text-decoration: none; display: block;
             transition: transform 0.2s;
             filter: drop-shadow(0px 8px 15px rgba(0,0,0,0.1));
@@ -117,7 +125,7 @@
         #follow-png { width: 300px; height: auto; display: block; }
         
         .footer { 
-            margin-top: 30px; font-size: 10px; color: #ccc; 
+            margin-top: 20px; font-size: 10px; color: #ccc; 
             font-family: 'Silkscreen', cursive;
         }
 
@@ -159,7 +167,7 @@
     <h1>INSERT COIN TO START</h1>
 
     <div class="wheel-container">
-        <img src="https://cdn-icons-png.flaticon.com/512/25/25623.png" class="pointer" style="width: 30px; top:-15px; filter: invert(1);">
+        <img src="https://cdn-icons-png.flaticon.com/512/25/25623.png" class="pointer" style="filter: invert(1);">
 
         <div id="wheel">
             <img id="my-wheel-design" src="wheel_design.png" alt="My Wheel">
@@ -185,7 +193,7 @@
         let currentRotation = 0;
         let isSpinning = false;
 
-        // 0-60=Love, 60-120=Wealth, 120-180=Health, etc.
+        // 0-60=Love, 60-120=Wealth...
         const segmentConfig = ['Love', 'Wealth', 'Health', 'Lucky', 'Career', 'Secret'];
 
         function spinWheel() {
@@ -207,17 +215,13 @@
         }
 
         function calculateResult(finalAngle) {
-            // 算出图片正上方的原始角度
             let actualDeg = (360 - (finalAngle % 360)) % 360;
-            
-            // 直接除以60取整，对应 0-5 的索引
             let index = Math.floor(actualDeg / 60);
 
             if(index >= 6) index = 5;
 
             const category = segmentConfig[index];
             console.log("最终角度: " + actualDeg + "° -> 索引: " + index + " -> 结果: " + category);
-            
             showResult(category);
         }
 
