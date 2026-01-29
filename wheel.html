@@ -66,13 +66,16 @@
             position: relative;
             transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
             overflow: hidden;
+            
+            /* 防止图片边缘被切掉的内边距 */
+            padding: 6px; 
+            box-sizing: border-box; 
         }
 
         /* --- 自定义设计图 --- */
         #my-wheel-design {
             width: 100%; height: 100%;
             object-fit: cover; display: block;
-            border-radius: 50%;
         }
 
         /* --- 指针 --- */
@@ -85,12 +88,16 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
-        /* --- 中间按钮 (图片版) --- */
+        /* --- 🆕 中间按钮 (加大版) --- */
         .center-btn {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 90px; height: 90px;
+            
+            /* 👇 之前是 90px，现在改成了 120px */
+            width: 120px; 
+            height: 120px;
+            
             object-fit: contain;
             cursor: pointer; z-index: 20;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
@@ -178,61 +185,39 @@
         let currentRotation = 0;
         let isSpinning = false;
 
+        // 0-60=Love, 60-120=Wealth, 120-180=Health, etc.
+        const segmentConfig = ['Love', 'Wealth', 'Health', 'Lucky', 'Career', 'Secret'];
+
         function spinWheel() {
             if (isSpinning) return;
             isSpinning = true;
             const wheel = document.getElementById('wheel');
             
-            // 随机旋转度数
             const randomDeg = Math.floor(Math.random() * 360);
-            const extraSpins = 360 * 5; // 多转5圈
+            const extraSpins = 360 * 5; 
             const totalDeg = currentRotation + extraSpins + randomDeg;
             
             wheel.style.transform = `rotate(${totalDeg}deg)`;
             currentRotation = totalDeg;
 
-            // 4秒后计算结果
             setTimeout(() => {
                 isSpinning = false;
                 calculateResult(totalDeg);
             }, 4000);
         }
 
-        // 🆕 核心修正：按照你的图片角度精确计算
         function calculateResult(finalAngle) {
-            // 1. 算出转盘最后停在哪个角度 (相对于0度)
-            // 为什么要用 360 - ...? 因为转盘是顺时针转，但角度坐标是逆时针分布的
+            // 算出图片正上方的原始角度
             let actualDeg = (360 - (finalAngle % 360)) % 360;
             
-            let category = '';
+            // 直接除以60取整，对应 0-5 的索引
+            let index = Math.floor(actualDeg / 60);
 
-            // 2. 根据你的设计图进行区间判断
-            // Love (人缘): 跨越 0 度 (330-360 和 0-30)
-            if (actualDeg >= 330 || actualDeg < 30) {
-                category = 'Love';
-            } 
-            // Wealth (财富): 30-90
-            else if (actualDeg >= 30 && actualDeg < 90) {
-                category = 'Wealth';
-            } 
-            // Health (健康): 90-150
-            else if (actualDeg >= 90 && actualDeg < 150) {
-                category = 'Health';
-            } 
-            // Lucky (幸运): 150-210
-            else if (actualDeg >= 150 && actualDeg < 210) {
-                category = 'Lucky';
-            } 
-            // Career (事业): 210-270
-            else if (actualDeg >= 210 && actualDeg < 270) {
-                category = 'Career';
-            } 
-            // Secret (隐藏): 270-330
-            else if (actualDeg >= 270 && actualDeg < 330) {
-                category = 'Secret';
-            }
+            if(index >= 6) index = 5;
 
-            console.log("最终角度: " + actualDeg + "° -> 结果: " + category);
+            const category = segmentConfig[index];
+            console.log("最终角度: " + actualDeg + "° -> 索引: " + index + " -> 结果: " + category);
+            
             showResult(category);
         }
 
