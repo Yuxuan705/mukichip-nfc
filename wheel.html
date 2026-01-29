@@ -49,15 +49,13 @@
             white-space: nowrap; 
         }
 
-        /* --- 转盘容器 (紧凑版) --- */
+        /* --- 转盘容器 (紧凑版 + 大尺寸) --- */
         .wheel-container {
             position: relative;
             
-            /* 尺寸保持加大版 380px */
             width: 380px; 
             height: 380px;
             
-            /* 👇 修改点：上边距减少 (20px -> 5px)，拉近和标题的距离 */
             margin-top: 5px;
             margin-bottom: 0px; 
             
@@ -85,13 +83,15 @@
             object-fit: cover; display: block;
         }
 
-        /* --- 指针 --- */
+        /* --- 指针 (微调版) --- */
         .pointer {
             position: absolute;
-            top: -25px; 
+            /* 👇 修改点：位置下移 (从 -25px 到 -10px) */
+            top: -10px; 
             left: 50%;
             transform: translateX(-50%);
-            width: 45px; 
+            /* 👇 修改点：大小变小 (从 45px 到 35px) */
+            width: 35px; 
             auto; 
             z-index: 10;
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
