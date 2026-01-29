@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Muki's Luck Supply Co.</title>
+    <title>Muki's Lab 🧪</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,15 +22,12 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- 🆕 新增：顶部 Coin 图片样式 --- */
+        /* --- Coin 动态图样式 --- */
         .coin-header-img {
-            width: 80px; /* 图片宽度，你可以根据需要调整 */
+            width: 80px; 
             height: auto;
-            margin-top: 40px; /* 距离顶部的距离 */
-            margin-bottom: 15px; /* 距离下面标题的距离 */
-            /* 加一点像素风的投影，让它浮起来 */
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
-            /* 可选：加一个简单的上下浮动动画 */
+            margin-top: 40px; 
+            margin-bottom: 15px; 
             animation: floatCoin 2s ease-in-out infinite;
         }
 
@@ -39,10 +36,10 @@
             50% { transform: translateY(-8px); }
         }
 
-        /* --- 标题样式 (调整了边距) --- */
+        /* --- 标题样式 --- */
         h1 { 
             color: #333; 
-            margin-top: 0; /* 把之前的 margin 去掉，由上面的图片控制间距 */
+            margin-top: 0; 
             font-size: 18px; 
             font-family: 'Silkscreen', cursive; 
             letter-spacing: 1px;
@@ -88,22 +85,28 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
-        /* --- 中间按钮 (GO) 全白版 --- */
+        /* --- 🆕 中间按钮 (改成图片版) --- */
         .center-btn {
             position: absolute;
             top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px; height: 80px;
-            background: #fff;
-            border: none;
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            font-family: 'Silkscreen', cursive; 
-            font-size: 24px; color: #333;
-            cursor: pointer; z-index: 5;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transform: translate(-50%, -50%); /* 绝对居中 */
+            
+            width: 90px;  /* 设置按钮大小，根据你的图片调整 */
+            height: 90px; 
+            object-fit: contain; /* 保持图片比例 */
+            
+            cursor: pointer; 
+            z-index: 20; /* 确保层级比转盘高，能点到 */
+            
+            /* 给图片加一点点浮起来的阴影 */
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            transition: transform 0.1s;
         }
-        .center-btn:active { transform: translate(-50%, -50%) scale(0.95); background: #f5f5f5; }
+        
+        /* 点击时的缩放效果 */
+        .center-btn:active { 
+            transform: translate(-50%, -50%) scale(0.9); 
+        }
 
         /* --- IG 按钮区域 --- */
         .follow-link {
@@ -137,16 +140,13 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: block;
         }
         
-        /* --- 弹窗关闭按钮 (回归白色版) --- */
+        /* --- 弹窗关闭按钮 (白色版) --- */
         .close-btn {
             margin-top: 25px; padding: 12px 30px;
-            
-            /* 回归白色背景，深色文字 */
             background: #fff; 
             color: #333;
-            
             border-radius: 8px;
-            border: 3px solid #333; /* 保持像素风黑框 */
+            border: 3px solid #333;
             font-family: 'Silkscreen', cursive;
             font-size: 14px; 
             cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -157,7 +157,7 @@
 </head>
 <body>
 
-    <img src="insert_coin.png" alt="Insert Coin" class="coin-header-img">
+    <img src="insert_coin.gif" alt="Insert Coin" class="coin-header-img">
 
     <h1>INSERT COIN TO START</h1>
 
@@ -168,7 +168,7 @@
             <img id="my-wheel-design" src="wheel_design.png" alt="My Wheel">
         </div>
 
-        <div class="center-btn" onclick="spinWheel()">GO</div>
+        <img src="game_btn.png" class="center-btn" onclick="spinWheel()" alt="GO">
     </div>
 
     <a href="https://www.instagram.com/yuxuantsuki/" class="follow-link">
