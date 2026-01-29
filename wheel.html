@@ -85,28 +85,18 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
         }
 
-        /* --- 🆕 中间按钮 (改成图片版) --- */
+        /* --- 中间按钮 (图片版) --- */
         .center-btn {
             position: absolute;
             top: 50%; left: 50%;
-            transform: translate(-50%, -50%); /* 绝对居中 */
-            
-            width: 90px;  /* 设置按钮大小，根据你的图片调整 */
-            height: 90px; 
-            object-fit: contain; /* 保持图片比例 */
-            
-            cursor: pointer; 
-            z-index: 20; /* 确保层级比转盘高，能点到 */
-            
-            /* 给图片加一点点浮起来的阴影 */
+            transform: translate(-50%, -50%);
+            width: 90px; height: 90px;
+            object-fit: contain;
+            cursor: pointer; z-index: 20;
             filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
             transition: transform 0.1s;
         }
-        
-        /* 点击时的缩放效果 */
-        .center-btn:active { 
-            transform: translate(-50%, -50%) scale(0.9); 
-        }
+        .center-btn:active { transform: translate(-50%, -50%) scale(0.9); }
 
         /* --- IG 按钮区域 --- */
         .follow-link {
@@ -140,7 +130,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.5); display: block;
         }
         
-        /* --- 弹窗关闭按钮 (白色版) --- */
+        /* --- 弹窗关闭按钮 --- */
         .close-btn {
             margin-top: 25px; padding: 12px 30px;
             background: #fff; 
@@ -188,30 +178,61 @@
         let currentRotation = 0;
         let isSpinning = false;
 
-        // ⚠️ 确保顺序：12点, 2点, 4点, 6点, 8点, 10点
-        const segmentConfig = ['Love', 'Wealth', 'Health', 'Lucky', 'Career', 'Secret'];
-
         function spinWheel() {
             if (isSpinning) return;
             isSpinning = true;
             const wheel = document.getElementById('wheel');
+            
+            // 随机旋转度数
             const randomDeg = Math.floor(Math.random() * 360);
-            const extraSpins = 360 * 5; 
+            const extraSpins = 360 * 5; // 多转5圈
             const totalDeg = currentRotation + extraSpins + randomDeg;
             
             wheel.style.transform = `rotate(${totalDeg}deg)`;
             currentRotation = totalDeg;
 
+            // 4秒后计算结果
             setTimeout(() => {
                 isSpinning = false;
                 calculateResult(totalDeg);
             }, 4000);
         }
 
+        // 🆕 核心修正：按照你的图片角度精确计算
         function calculateResult(finalAngle) {
-            const actualDeg = finalAngle % 360;
-            let index = Math.floor((360 - actualDeg) / 60) % 6;
-            const category = segmentConfig[index];
+            // 1. 算出转盘最后停在哪个角度 (相对于0度)
+            // 为什么要用 360 - ...? 因为转盘是顺时针转，但角度坐标是逆时针分布的
+            let actualDeg = (360 - (finalAngle % 360)) % 360;
+            
+            let category = '';
+
+            // 2. 根据你的设计图进行区间判断
+            // Love (人缘): 跨越 0 度 (330-360 和 0-30)
+            if (actualDeg >= 330 || actualDeg < 30) {
+                category = 'Love';
+            } 
+            // Wealth (财富): 30-90
+            else if (actualDeg >= 30 && actualDeg < 90) {
+                category = 'Wealth';
+            } 
+            // Health (健康): 90-150
+            else if (actualDeg >= 90 && actualDeg < 150) {
+                category = 'Health';
+            } 
+            // Lucky (幸运): 150-210
+            else if (actualDeg >= 150 && actualDeg < 210) {
+                category = 'Lucky';
+            } 
+            // Career (事业): 210-270
+            else if (actualDeg >= 210 && actualDeg < 270) {
+                category = 'Career';
+            } 
+            // Secret (隐藏): 270-330
+            else if (actualDeg >= 270 && actualDeg < 330) {
+                category = 'Secret';
+            }
+
+            console.log("最终角度: " + actualDeg + "° -> 结果: " + category);
             showResult(category);
         }
 
